@@ -62,30 +62,33 @@ for tweet in tweets:
     tweet_time = tweet.created_at.astimezone(JST)
     if tweet_time < since_time:
         break
-    
+
     # Extract song information from tweet
     match = re.match(r'「(.+)」\s+(.+)\s+(\d{2}:\d{2})', tweet.full_text)
     if match:
         title, artist, timestamp = match.groups()
-        
+
         # Search for song on iTunes Store
         itunes_link = itunes_search(title + " " + artist)
-        
+
         # Build YouTube search query
         youtube_query = title + " " + artist + " official video"
         youtube_query = youtube_query.replace(" ", "+")
-        youtube_link = f"https://www.youtube.com/results?search_query={youtube_query}"
-        
+        youtube_link = f"https://www.youtube.com/results?search_query={youtube_query}&force_navigate=1"
+
         # Build Spotify search query
         spotify_query = title + " " + artist
         spotify_query = spotify_query.replace(" ", "+")
         spotify_link = f"https://open.spotify.com/search/{spotify_query}"
-        
+
         # Display song information and links
         st.write(f'{title} / {artist} ({timestamp}) ', unsafe_allow_html=True)
         if itunes_link:
-            st.write(f'<a href="{itunes_link}" target="_blank"><img src="https://cdn.icon-icons.com/icons2/294/PNG/256/iTunes_Store_31097.png" width="20" height="20"></a>', unsafe_allow_html=True)
+            itunes_png = base64.b64encode(open('its.png', 'rb').read()).decode('utf-8')
+            st.write(f'<a href="{itunes_link}" target="_blank"><img src="data:image/png;base64,{itunes_png}" width="20" height="20"></a>', unsafe_allow_html=True)
         if youtube_link:
-            st.write(f'<a href="{youtube_link}" target="_blank"><img src="https://cdn.icon-icons.com/icons2/195/PNG/256/YouTube_23392.png" width="20" height="20"></a>', unsafe_allow_html=True)
+            youtube_png = base64.b64encode(open('youtube.png', 'rb').read()).decode('utf-8')
+            st.write(f'<a href="{youtube_link}" target="_blank"><img src="data:image/png;base64,{youtube_png}" width="20" height="20"></a>', unsafe_allow_html=True)
         if spotify_link:
-            st.write(f'<a href="{spotify_link}" target="_blank"><img src="https://cdn.icon-icons.com/icons2/836/PNG/512/Spotify_icon-icons.com_66783.png" width="20" height="20"></a>', unsafe_allow_html=True)
+            spotify_png = base64.b64encode(open('spotify.png', 'rb').read()).decode('utf-8')
+            st.write(f'<a href="{spotify_link}" target="_blank"><img src="data:image/png;base64,{spotify_png}" width="20" height="20"></a>', unsafe_allow_html=True)
